@@ -2,49 +2,49 @@
 
 #s3
 
-//create s3 bucket 
+// create s3 bucket : <br>
 aws s3 mb s3://smsbucket --endpoint-url http://localhost:4566
 
-//list s3 bucket
+// list s3 bucket : <br>
 aws  --endpoint-url http://localhost:4566 s3 ls
 
-//Upload a file to s3:
+// upload a file to s3 : <br>
 aws s3 cp sms.csv s3://smsbucket/sms.csv --endpoint-url http://localhost:4566
 
-//s3put trigger notification
+// s3 put trigger notification : <br>
 aws s3api put-bucket-notification-configuration --bucket smsbucket --notification-configuration file://notification.json --endpoint-url http://localhost:4566
 
 --------------------------------------------------------------------------------------------------------------------------
 
-#lamda
+#lambda
 
-// create lambda
+// create lambda : <br>
 aws lambda --endpoint-url=http://localhost:4566 \
-         create-function --function-name=hellolamda \
+         create-function --function-name=hellolambda \
          --runtime=python2.7 \
          --role=whatever \
          --zip-file fileb:///Users/b0205391/PycharmProjects/LearnLocalStack/s3-to-sqs.py.zip \
          --handler=s3-to-sqs.lambda_handler
 
-// delete lambda functions:
-aws lambda --endpoint-url=http://localhost:4566 delete-function --function-name=hellolamda
+// delete lambda functions : <br>
+aws lambda --endpoint-url=http://localhost:4566 delete-function --function-name=hellolambda
 
-//invoke lambda
-aws lambda --endpoint-url=http://localhost:4566 invoke --function-name hellolamda dd
+// invoke lambda : <br>
+aws lambda --endpoint-url=http://localhost:4566 invoke --function-name hellolambda dd
 
-//List lamda functions :
+// list lambda functions :<br>
 aws lambda --endpoint-url=http://localhost:4566 list-functions
 
 --------------------------------------------------------------------------------------------------------------------------
 
 #SQS
 
-// create sqs
+// create sqs : <br>
 aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name sms_queue
 
-// send msg to sqs
+// send msg to sqs : <br>
 aws --endpoint-url=http://localhost:4566 sqs send-message --queue-url http://localhost:4566/queue/smsqueue --message-body 
 'Test Message!'
 
-// retrieve msg from sqs
+// retrieve msg from sqs : <br>
 aws --endpoint-url=http://localhost:4566 sqs receive-message --queue-url http://localhost:4566/queue/sms_queue
